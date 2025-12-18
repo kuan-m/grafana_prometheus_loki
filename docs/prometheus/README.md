@@ -91,3 +91,11 @@ clamp_min(node_cpu_seconds_total, 300)
 ```bash
 clamp_max(node_cpu_seconds_total, 15000)
 ```
+
+## 4-20. Delta and IDelta
+
+- **Delta** returns the difference between the first and last value of each time series element in range
+- temperature between now and 2 hours ago
+```bash
+delta(cpu_temp_celsius{host="zeus"}[2h])
+```
