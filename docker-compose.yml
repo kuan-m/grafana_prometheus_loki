@@ -34,5 +34,52 @@ services:
     ports:
       - "${NODE_EXPORTER_PORT}:9100"
 
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      prometheus:
+        condition: service_started
+    ports:
+      - "${GRAFANA_PORT:-3030}:3030"
+    env_file:
+      - .env
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./infra/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+
+  shoehub:
+    image: aussiearef/shoehub
+    container_name: shoehub
+    restart: unless-stopped
+    ports:
+      - "${SHOEHUB_PORT:-8020}:8080"
+
+  mysql:
+    image: mysql:8.0.41-debian
+    platform: linux/amd64
+    container_name: mysql
+    environment:
+    - MYSQL_DATABASE=${MYSQL_DATABASE:-prometheus}
+    - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root}
+    ports:
+      - "${DOCKER_MYSQL_BIND_PORT:-33077}:3306"
+    volumes:
+      - mysql-storage:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p${DB_ROOT_PASSWORD:-root} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    env_file:
+      - .env
+
 volumes:
   prometheus-data:
+  grafana-data:
+  mysql-storage:

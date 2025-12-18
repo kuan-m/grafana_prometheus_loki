@@ -1,8 +1,11 @@
-.PHONY: up
+.PHONY: up down
 
 build:
-	@cp .env.dev.example .env || true
+	@cp .env.example .env || true
 	@docker compose up -d
 
 up:
 	@docker compose up -d
+
+down:
+	@docker compose down
