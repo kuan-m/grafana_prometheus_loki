@@ -1,12 +1,8 @@
-server:
-  http_listen_port: 9080
-
-positions:
-  filename: /tmp/positions.yaml
-
-clients:
-  - url: http://loki:3100/loki/api/v1/push
-
+## 9-6. Creating and Attaching Static Labels
+```bash
+infra/promtail/promtail-config.yml
+```
+```bash
 scrape_configs:
   - job_name: system
     static_configs:
@@ -23,6 +19,8 @@ scrape_configs:
         labels:
           job: loki_udemy
           __path__: /var/log/loki_udemy.log
-          team: DevOps
-          env: Prod
-
+          team: DevOps # Add this lines
+          env: Prodbash # Add this lines
+```
+### than u can filter
+![Static_labels](img/Static_labels.png)
