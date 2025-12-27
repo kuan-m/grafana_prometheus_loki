@@ -23,4 +23,15 @@ scrape_configs:
         labels:
           job: loki_udemy
           __path__: /var/log/loki_udemy.log
+          team: DevOps
+          env: Prod
 
+    pipeline_stages:
+    - logfmt: # парсит лог как key=value
+        mapping:
+          component: # вытаскивает поле component
+          level:
+    - labels:
+        component:
+        level:
+        
